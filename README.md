@@ -9,6 +9,7 @@ React dashboard for the **Payment Processing & Reconciliation Platform**
 - **Payments**: create (with an idempotency key per payment), list with paging and status filter
 - **Bank statements**: upload a CSV, see uploaded statements, reconcile one with a click
 - **Reconciliation**: list of runs, and a report per run (matched / amount mismatch / missing in bank / missing in ours)
+- **✨ Explain** on every unmatched report line: an AI suggestion (Spring AI + OpenAI in reconciliation-service) or a rule-based hint when no AI key is set, always labelled "review before acting"
 
 ## Tech
 React 19 · TypeScript · Vite · React Router
@@ -21,7 +22,7 @@ React 19 · TypeScript · Vite · React Router
 | 2 | Redis | Ubuntu (WSL): `sudo service redis-server start` | 6379 |
 | 3 | Kafka | Ubuntu (WSL): `cd ~/kafka && bin/kafka-server-start.sh config/server.properties` | 9092 |
 | 4 | payment-service | IntelliJ ▶ (or `./mvnw spring-boot:run`) | 8080 |
-| 5 | reconciliation-service | IntelliJ ▶ | 8081 |
+| 5 | reconciliation-service | IntelliJ ▶ (optional: env var `OPENAI_API_KEY` for AI explanations) | 8081 |
 | 6 | this dashboard | `npm install` once, then `npm run dev` | 5173 |
 
 Open http://localhost:5173 and sign in with a demo user: `operator`, `auditor` or `admin`.
@@ -35,6 +36,7 @@ The demo password is `app.security.demo-password` in payment-service's `applicat
 | JWT secret (**must be the same in both services**) | env var `JWT_SECRET` | a local-dev-only value |
 | Demo users' password | env var `DEMO_PASSWORD` | a local-dev-only value |
 | DB password | env var `DB_PASSWORD` | `postgres` |
+| OpenAI key (reconciliation-service only, never commit it) | env var `OPENAI_API_KEY` | not set → rule-based hints |
 
 > ⚠️ The defaults are for local development only. Before deploying, set `JWT_SECRET`, `DEMO_PASSWORD` and `DB_PASSWORD` to real secrets.
 
